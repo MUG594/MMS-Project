@@ -1,0 +1,48 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:976078872455:function:8091bfe4-7721-4778-ad75-f8cbe1fa09ab:Release_0"
+        },
+        "regions": {
+          "EU": {
+            "endpoint": {
+              "uri": "arn:aws:lambda:eu-west-1:976078872455:function:8091bfe4-7721-4778-ad75-f8cbe1fa09ab:Release_0"
+            }
+          },
+          "NA": {
+            "endpoint": {
+              "uri": "arn:aws:lambda:us-east-1:976078872455:function:8091bfe4-7721-4778-ad75-f8cbe1fa09ab:Release_0"
+            }
+          },
+          "FE": {
+            "endpoint": {
+              "uri": "arn:aws:lambda:us-west-2:976078872455:function:8091bfe4-7721-4778-ad75-f8cbe1fa09ab:Release_0"
+            }
+          }
+        }
+      }
+    },
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "category": "KNOWLEDGE_AND_TRIVIA",
+      "distributionCountries": [],
+      "isAvailableWorldwide": true,
+      "locales": {
+        "de-DE": {
+          "description": "Sample Full Description",
+          "examplePhrases": [
+            "Alexa öffne hallo welt",
+            "hallo",
+            "hilfe"
+          ],
+          "keywords": [],
+          "name": "CO2Consultant",
+          "summary": "Sample Short Description"
+        }
+      },
+      "testingInstructions": "Sample Testing Instructions."
+    }
+  }
+}
