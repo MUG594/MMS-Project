@@ -1,41 +1,72 @@
 {
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "change me",
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": []
-        },
-        {
-          "name": "HelloWorldIntent",
-          "slots": [],
-          "samples": [
-            "hallo",
-            "wie geht\u0027s dir",
-            "sag hallo welt",
-            "sag hallo"
-          ]
-        },
-        {
-          "name": "AMAZON.NavigateHomeIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.FallbackIntent",
-          "samples": []
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "change me",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "hallo",
+                        "wie geht's dir",
+                        "sag hallo welt",
+                        "sag hallo"
+                    ]
+                },
+                {
+                    "name": "LookupIntent",
+                    "slots": [
+                        {
+                            "name": "Grocery",
+                            "type": "LIST_OF_ITEMS"
+                        }
+                    ],
+                    "samples": [
+                        "CO2-Ausstoß von {Grocery}",
+                        "CO2-Ausstoß einer {Grocery}",
+                        "CO2-Ausstoß eines {Grocery}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                }
+            ],
+            "types": [
+                {
+                    "name": "LIST_OF_ITEMS",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Apfel",
+				"id": "apple"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Äpfel"
+				"id": "apple"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
-      ],
-      "types": []
     }
-  },
-  "version": "1"
 }
