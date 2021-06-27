@@ -1,72 +1,328 @@
 {
-    "interactionModel": {
-        "languageModel": {
-            "invocationName": "change me",
-            "intents": [
-                {
-                    "name": "AMAZON.CancelIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.HelpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.StopIntent",
-                    "samples": []
-                },
-                {
-                    "name": "HelloWorldIntent",
-                    "slots": [],
-                    "samples": [
-                        "hallo",
-                        "wie geht's dir",
-                        "sag hallo welt",
-                        "sag hallo"
-                    ]
-                },
-                {
-                    "name": "LookupIntent",
-                    "slots": [
-                        {
-                            "name": "Grocery",
-                            "type": "LIST_OF_ITEMS"
-                        }
-                    ],
-                    "samples": [
-                        "CO2-Ausstoß von {Grocery}",
-                        "CO2-Ausstoß einer {Grocery}",
-                        "CO2-Ausstoß eines {Grocery}"
-                    ]
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.FallbackIntent",
-                    "samples": []
-                }
-            ],
-            "types": [
-                {
-                    "name": "LIST_OF_ITEMS",
-                    "values": [
-                        {
-                            "name": {
-                                "value": "Apfel",
-				"id": "apple"
-                            }
-                        },
-                        {
-                            "name": {
-                                "value": "Äpfel"
-				"id": "apple"
-                            }
-                        }
-                    ]
-                }
-            ]
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "my footprint",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "HelloWorldIntent",
+          "slots": [],
+          "samples": [
+            "hallo",
+            "wie geht\u0027s dir",
+            "sag hallo welt",
+            "sag hallo"
+          ]
+        },
+        {
+          "name": "GroceriesLookupIntent",
+          "slots": [
+            {
+              "name": "Grocery",
+              "type": "LIST_OF_ITEMS"
+            }
+          ],
+          "samples": [
+            "CO zwei Ausstoß von {Grocery}",
+            "CO zwei Ausstoß einer {Grocery}",
+            "CO zwei Ausstoß eines {Grocery}",
+            "Welchen CO zwei Ausstoß hat eine {Grocery}",
+            "Welchen CO zwei Ausstoß hat ein {Grocery}",
+            "Welchen CO zwei Ausstoß haben {Grocery}",
+            "CO zwei Ausstoß von {Grocery}",
+            "CO zwei Ausstoß einer {Grocery}",
+            "CO zwei Ausstoß eines {Grocery}",
+            "Ist mein {Grocery} regional",
+            "Ist mein {Grocery} saisonal",
+            "Sind meine {Grocery} regional",
+            "Sind meine {Grocery} saisonal",
+            "Berechne mir den CO zwei Ausstoß eines {Grocery}",
+            "Berechne mir den CO zwei Ausstoß einer {Grocery}",
+            "Berechne mir den CO zwei Ausstoß von {Grocery}",
+            "Wie ist der CO zwei Ausstoß eines {Grocery}",
+            "Wie ist der CO zwei Ausstoß einer {Grocery}",
+            "Wie ist der CO zwei Ausstoß von {Grocery}",
+            "{Grocery}"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
         }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "Apfel"
+              }
+            },
+            {
+              "name": {
+                "value": "Ananas"
+              }
+            },
+            {
+              "name": {
+                "value": "Aubergine"
+              }
+            },
+            {
+              "name": {
+                "value": "Auberginen"
+              }
+            },
+            {
+              "name": {
+                "value": "Avocado"
+              }
+            },
+            {
+              "name": {
+                "value": "Banane"
+              }
+            },
+            {
+              "name": {
+                "value": "Bananen"
+              }
+            },
+            {
+              "name": {
+                "value": "Birne"
+              }
+            },
+            {
+              "name": {
+                "value": "Birnen"
+              }
+            },
+            {
+              "name": {
+                "value": "Blumenkohl"
+              }
+            },
+            {
+              "name": {
+                "value": "Bohnen"
+              }
+            },
+            {
+              "name": {
+                "value": "Brokkoli"
+              }
+            },
+            {
+              "name": {
+                "value": "Champignons"
+              }
+            },
+            {
+              "name": {
+                "value": "Erbsen"
+              }
+            },
+            {
+              "name": {
+                "value": "Erdbeeren"
+              }
+            },
+            {
+              "name": {
+                "value": "Feldsalat"
+              }
+            },
+            {
+              "name": {
+                "value": "Fenchel"
+              }
+            },
+            {
+              "name": {
+                "value": "Grünkohl"
+              }
+            },
+            {
+              "name": {
+                "value": "Karotte"
+              }
+            },
+            {
+              "name": {
+                "value": "Karotten"
+              }
+            },
+            {
+              "name": {
+                "value": "Kartoffel"
+              }
+            },
+            {
+              "name": {
+                "value": "Kartoffeln"
+              }
+            },
+            {
+              "name": {
+                "value": "Kichererbsen"
+              }
+            },
+            {
+              "name": {
+                "value": "Kohlrabi"
+              }
+            },
+            {
+              "name": {
+                "value": "Kübis"
+              }
+            },
+            {
+              "name": {
+                "value": "Lauch"
+              }
+            },
+            {
+              "name": {
+                "value": "Leinsamen"
+              }
+            },
+            {
+              "name": {
+                "value": "Linsen"
+              }
+            },
+            {
+              "name": {
+                "value": "Mais"
+              }
+            },
+            {
+              "name": {
+                "value": "Orange"
+              }
+            },
+            {
+              "name": {
+                "value": "Orangen"
+              }
+            },
+            {
+              "name": {
+                "value": "Paprika"
+              }
+            },
+            {
+              "name": {
+                "value": "Paprikas"
+              }
+            },
+            {
+              "name": {
+                "value": "Pfirsich"
+              }
+            },
+            {
+              "name": {
+                "value": "Pfirsiche"
+              }
+            },
+            {
+              "name": {
+                "value": "Rettich"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosenkohl"
+              }
+            },
+            {
+              "name": {
+                "value": "Rote Beete"
+              }
+            },
+            {
+              "name": {
+                "value": "Rucola"
+              }
+            },
+            {
+              "name": {
+                "value": "Gurke"
+              }
+            },
+            {
+              "name": {
+                "value": "Sellerie"
+              }
+            },
+            {
+              "name": {
+                "value": "Spargel"
+              }
+            },
+            {
+              "name": {
+                "value": "Spinat"
+              }
+            },
+            {
+              "name": {
+                "value": "Tomate"
+              }
+            },
+            {
+              "name": {
+                "value": "Tomaten"
+              }
+            },
+            {
+              "name": {
+                "value": "Trauben"
+              }
+            },
+            {
+              "name": {
+                "value": "Weißkohl"
+              }
+            },
+            {
+              "name": {
+                "value": "Zucchini"
+              }
+            },
+            {
+              "name": {
+                "value": "Zwiebel"
+              }
+            },
+            {
+              "name": {
+                "value": "Zwiebeln"
+              }
+            }
+          ],
+          "name": "LIST_OF_ITEMS"
+        }
+      ]
     }
+  },
+  "version": "9"
 }

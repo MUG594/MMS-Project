@@ -3,14 +3,30 @@
  * Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
  * session persistence, api calls, and more.
  * */
-const Alexa = require('ask-sdk-core');
+const Alexa = require('ask-sdk-core'); 
+//const request = require('requests');
+  
+
+const getRemoteData = (url) => new Promise((resolve, reject) => {  
+  const client = url.startsWith('https') ? require('https') : require('http');  
+  const request = client.get(url, (response) => {  
+    if (response.statusCode < 200 || response.statusCode > 299) {  
+      reject(new Error(`Failed with status code: ${response.statusCode}`));  
+    }  
+    const body = [];  
+    response.on('data', (chunk) => body.push(chunk));  
+    response.on('end', () => resolve(body.join('')));  
+  });  
+  request.on('error', (err) => reject(err));  
+}); 
+
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome, you can say Hello or Help. Which would you like to try?';
+        const speakOutput = 'Willkommen zum CO2-Berater für Ihren Einkauf. Wie kann ich Ihnen helfen?';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -32,7 +48,79 @@ const HelloWorldIntentHandler = {
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
-};
+};     
+
+/*const fetchQuotes = () => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            uri: 'http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuoteFromFaction/4',
+            json: true // Automatically parses the JSON string in the response
+        };
+        request(options, (error, response, body) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(body.starWarsQuote);
+            });
+    });
+};*/
+
+const GroceriesIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesLookupIntent';
+    },
+    async handle(handlerInput) {
+        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
+        const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+    
+        const itemSlot = handlerInput.requestEnvelope.request.intent.slots.Item;
+        let itemName;
+        if (itemSlot && itemSlot.value) {
+          itemName = itemSlot.value.toLowerCase();
+        }
+        
+        let outputSpeech = 'This is the default message.';  
+  
+        await getRemoteData('https://ipinfo.io')  
+          .then((response) => {  
+            const data = JSON.parse(response);  
+            outputSpeech = data.country;
+            /*outputSpeech = `There are currently ${data.people.length} astronauts in space. `;  
+            for (let i = 0; i < data.people.length; i += 1) {  
+              if (i === 0) {  
+                  
+                outputSpeech = `${outputSpeech}Their names are: ${data.people[i].name}, `;  
+              } else if (i === data.people.length - 1) {  
+                  
+                outputSpeech = `${outputSpeech}and ${data.people[i].name}.`;  
+              } else {  
+                  
+                outputSpeech = `${outputSpeech + data.people[i].name}, `;  
+              }  
+            }  */
+            })  
+            .catch((err) => {  
+                console.log(`ERROR: ${err.message}`);  
+            });  
+ /*     
+ 
+ $.get("https://ipinfo.io", function(response) {
+           country = response.country;
+        }, "jsonp");
+        */
+        
+        // get current month
+            ////  get location (user country) based on ip-address
+        
+        // get footprint of grocery
+        
+        return handlerInput.responseBuilder
+            .speak(outputSpeech)
+            .reprompt(outputSpeech)
+            .getResponse();
+    }
+}
 
 const HelpIntentHandler = {
     canHandle(handlerInput) {
@@ -145,6 +233,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         HelloWorldIntentHandler,
+        GroceriesIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
