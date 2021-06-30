@@ -4,8 +4,8 @@
  * session persistence, api calls, and more.
  * */
 const Alexa = require('ask-sdk-core'); 
-//const request = require('requests');
-  
+const axios = require('axios');
+const groceries = require('./groceries');
 
 const getRemoteData = (url) => new Promise((resolve, reject) => {  
   const client = url.startsWith('https') ? require('https') : require('http');  
@@ -41,29 +41,130 @@ const HelloWorldIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Hello World!';
+        const speakOutput = 'Hallo Welt! Ich bin ein CO zwei Berater von Helena und Fabian!';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
+};
+
+const GroceriesAddIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesAddIntent';
+    },
+    async handle(handlerInput) {     
+        let groceryName;
+        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
+        if (grocerySlot && grocerySlot.value) {
+          groceryName = grocerySlot.value.toLowerCase();
+        }
+        
+        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
+        let countryName;
+        if (countrySlot && countrySlot.value) {
+          countryName = countrySlot.value.toLowerCase();
+        } 
+        
+        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
+
+        await axios.get(`https://api.eu.amazonalexa.com/v1/devices/${deviceId}/settings/address/countryAndPostalCode`, { 
+          headers: {'Accept': 'application/json', 'Authorization': `Bearer ${consentToken}` }
+        })
+        .then((response) => {
+          country = response.data.countryCode.toLowerCase();
+        })
+        .catch((error)=> {
+            country = '';
+        });
+  
+        let speakOutput = 'Leider konnte ich Ihre Anfrage nicht hinzufügen.';
+        let grocery = getGrocery(country, groceryName, countryName);
+        if(grocery != undefined) {
+            shoppingList.push({"name": groceryName, "country": countryName, "value": grocery, "deleted": false });
+            speakOutput = groceryName + ' aus ' + countryName + ' hinzugefügt.';
+        }
+        
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
+}; 
+
+const GroceriesRemoveIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesRemoveIntent';
+    },
+    handle(handlerInput) {
+        let groceryName;
+        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
+        if (grocerySlot && grocerySlot.value) {
+          groceryName = grocerySlot.value.toLowerCase();
+        }
+        
+        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
+        let countryName;
+        if (countrySlot && countrySlot.value) {
+          countryName = countrySlot.value.toLowerCase();
+        } 
+        
+        shoppingList.forEach((item)=> {
+            if(item.name == groceryName && item.country == countryName){
+                item.deleted = true;
+            }
+        });
+        
+        const speakOutput = groceryName + ' aus ' + countryName + ' entfernt.';
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
+}; 
+
+const GroceriesSumIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesSumIntent';
+    },
+    handle(handlerInput) {
+        let currDate = new Date();
+        let currentMonth = currDate.getMonth() + 1;
+        let sum = 0;
+        let speakOutput = "Ihr Einkauf besteht aus: "
+        
+        shoppingList.forEach((item)=> {
+            if(item.deleted == false) {
+                speakOutput = speakOutput + item.name + " aus " + item.country + ", ";
+            
+                if(item.value.SeasonFrom <= currentMonth && item.value.SeasonTo >= currentMonth) {
+                    sum += item.value.InSeason;
+                }
+                else {
+                    sum += item.value.OffSeason;
+                }
+            }
+        });
+     
+        speakOutput = speakOutput + ". In Summe ergibt das einen errechneten CO Ausstoß von: " + sum + " Gramm. ";
+        speakOutput = speakOutput + "Das entspricht in etwa einer Fahrtstrecke von " + Math.round(sum / 0.2) + " Meter mit einem PKW!"
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
 };     
 
-/*const fetchQuotes = () => {
-    return new Promise((resolve, reject) => {
-        const options = {
-            uri: 'http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuoteFromFaction/4',
-            json: true // Automatically parses the JSON string in the response
-        };
-        request(options, (error, response, body) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(body.starWarsQuote);
-            });
-    });
-};*/
+let country = '';
+let shoppingList = new Array();
 
 const GroceriesIntentHandler = {
     canHandle(handlerInput) {
@@ -74,52 +175,84 @@ const GroceriesIntentHandler = {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
     
-        const itemSlot = handlerInput.requestEnvelope.request.intent.slots.Item;
-        let itemName;
-        if (itemSlot && itemSlot.value) {
-          itemName = itemSlot.value.toLowerCase();
+        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
+        let groceryName;
+        if (grocerySlot && grocerySlot.value) {
+          groceryName = grocerySlot.value.toLowerCase();
         }
         
-        let outputSpeech = 'This is the default message.';  
+        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
+        let countryName;
+        if (countrySlot && countrySlot.value) {
+          countryName = countrySlot.value.toLowerCase();
+        } 
   
-        await getRemoteData('https://ipinfo.io')  
-          .then((response) => {  
-            const data = JSON.parse(response);  
-            outputSpeech = data.country;
-            /*outputSpeech = `There are currently ${data.people.length} astronauts in space. `;  
-            for (let i = 0; i < data.people.length; i += 1) {  
-              if (i === 0) {  
-                  
-                outputSpeech = `${outputSpeech}Their names are: ${data.people[i].name}, `;  
-              } else if (i === data.people.length - 1) {  
-                  
-                outputSpeech = `${outputSpeech}and ${data.people[i].name}.`;  
-              } else {  
-                  
-                outputSpeech = `${outputSpeech + data.people[i].name}, `;  
-              }  
-            }  */
-            })  
-            .catch((err) => {  
-                console.log(`ERROR: ${err.message}`);  
-            });  
- /*     
- 
- $.get("https://ipinfo.io", function(response) {
-           country = response.country;
-        }, "jsonp");
-        */
+        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
+
+        await axios.get(`https://api.eu.amazonalexa.com/v1/devices/${deviceId}/settings/address/countryAndPostalCode`, { 
+          headers: {'Accept': 'application/json', 'Authorization': `Bearer ${consentToken}` }
+        })
+        .then((response) => {
+          country = response.data.countryCode.toLowerCase();
+        })
+        .catch((error)=> {
+            country = '';
+        });
         
-        // get current month
-            ////  get location (user country) based on ip-address
+        if(country == '') {
+            return handlerInput.responseBuilder
+                .withAskForPermissionsConsentCard(['read::alexa:device:all:address:country_and_postal_code'])
+                .speak("Leider kann ich Ihre Position nicht ermitteln. Bitte gewähren Sie mir die nötigen Berechtigungen zur Lokalisation")
+                .getResponse();
+        }
+  
+        let currDate = new Date();
+        let currentMonth = currDate.getMonth() + 1;
+        let groceryObject = undefined;
+  
+        groceryObject = getGrocery(country, groceryName, countryName);
+        let outputSpeech = '';
         
-        // get footprint of grocery
-        
+        if(groceryObject != undefined) {
+            if(groceryObject.SeasonFrom <= currentMonth && groceryObject.SeasonTo >= currentMonth) {
+                outputSpeech = groceryName + " aus " + countryName + " hat gerade Saison. Der CO zwei Ausstoß beträgt " + groceryObject.InSeason + " Gramm";
+            }
+            else {
+                outputSpeech = groceryName + " aus " + countryName + " ist gerade nicht saisonal, daher beträgt der CO zwei Ausstoß " + groceryObject.OffSeason + " Gramm";
+            }
+        }
+        else {
+            outputSpeech =outputSpeech+ "Leider konnte ich keine CO2 Informationen für " + groceryName + " aus " + countryName + " finden."
+        }
+  
         return handlerInput.responseBuilder
             .speak(outputSpeech)
             .reprompt(outputSpeech)
             .getResponse();
     }
+}
+
+function getGrocery(country, groceryName, countryName) {
+    let retVal = undefined;
+   groceries.countries.forEach(function (object) {
+        var key = Object.keys(object)[0];
+        if(key.toLowerCase() == country) {
+        	object[key].forEach(function(grocery) {
+        	var groceryKey = Object.keys(grocery)[0];
+            if(groceryKey.toLowerCase() == groceryName) {
+            	grocery[groceryKey].forEach(function(destCountry) {
+                  var destCountryKey = Object.keys(destCountry)[0];
+                  if(destCountryKey.toLowerCase() == countryName) {
+                    retVal =  destCountry[destCountryKey];
+                  }
+              });
+            }
+          });
+        }
+    });
+    
+    return retVal;
 }
 
 const HelpIntentHandler = {
@@ -128,7 +261,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
+        const speakOutput = 'Leider kann ich Ihnen nicht weiter helfen. Laufen Sie schreiend im Kreis.';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -234,6 +367,9 @@ exports.handler = Alexa.SkillBuilders.custom()
         LaunchRequestHandler,
         HelloWorldIntentHandler,
         GroceriesIntentHandler,
+        GroceriesRemoveIntentHandler,
+        GroceriesAddIntentHandler,
+        GroceriesSumIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,

@@ -26,7 +26,24 @@
       }
     },
     "manifestVersion": "1.0",
+    "permissions": [
+      {
+        "name": "alexa:devices:all:address:country_and_postal_code:read"
+      }
+    ],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "containsAds": false,
+      "isChildDirected": false,
+      "locales": {
+        "de-DE": {}
+      },
+      "usesPersonalInfo": false
+    },
     "publishingInformation": {
+      "automaticDistribution": {
+        "isActive": false
+      },
       "category": "KNOWLEDGE_AND_TRIVIA",
       "distributionCountries": [],
       "isAvailableWorldwide": true,

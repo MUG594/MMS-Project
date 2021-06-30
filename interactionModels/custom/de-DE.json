@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "my footprint",
+      "invocationName": "mein co zwei berater",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -19,10 +19,8 @@
           "name": "HelloWorldIntent",
           "slots": [],
           "samples": [
-            "hallo",
-            "wie geht\u0027s dir",
-            "sag hallo welt",
-            "sag hallo"
+            "Willkommen zum CO zwei Berater für Ihren Einkauf. Wie kann ich Ihnen helfen",
+            "Sag CO zwei Ausstoß von"
           ]
         },
         {
@@ -31,29 +29,106 @@
             {
               "name": "Grocery",
               "type": "LIST_OF_ITEMS"
+            },
+            {
+              "name": "Country",
+              "type": "LIST_OF_COUNTRIES"
             }
           ],
           "samples": [
             "CO zwei Ausstoß von {Grocery}",
+            "CO zwei Ausstoß von {Grocery} aus {Country}",
+            "CO zwei Ausstoß von {Grocery} von {Country}",
             "CO zwei Ausstoß einer {Grocery}",
+            "CO zwei Ausstoß einer {Grocery} aus {Country}",
+            "CO zwei Ausstoß einer {Grocery} von {Country}",
             "CO zwei Ausstoß eines {Grocery}",
+            "CO zwei Ausstoß eines {Grocery} aus {Country}",
+            "CO zwei Ausstoß eines {Grocery} von {Country}",
             "Welchen CO zwei Ausstoß hat eine {Grocery}",
+            "Welchen CO zwei Ausstoß hat eine {Grocery} aus {Country}",
+            "Welchen CO zwei Ausstoß hat eine {Grocery} von {Country}",
             "Welchen CO zwei Ausstoß hat ein {Grocery}",
+            "Welchen CO zwei Ausstoß hat ein {Grocery} aus {Country}",
+            "Welchen CO zwei Ausstoß hat ein {Grocery} von {Country}",
             "Welchen CO zwei Ausstoß haben {Grocery}",
+            "Welchen CO zwei Ausstoß haben {Grocery} aus {Country}",
+            "Welchen CO zwei Ausstoß haben {Grocery} von {Country}",
             "CO zwei Ausstoß von {Grocery}",
+            "CO zwei Ausstoß von {Grocery} aus {Country}",
+            "CO zwei Ausstoß von {Grocery} von {Country}",
             "CO zwei Ausstoß einer {Grocery}",
+            "CO zwei Ausstoß einer {Grocery} aus {Country}",
+            "CO zwei Ausstoß einer {Grocery} von {Country}",
             "CO zwei Ausstoß eines {Grocery}",
-            "Ist mein {Grocery} regional",
+            "CO zwei Ausstoß eines {Grocery} aus {Country}",
+            "CO zwei Ausstoß eines {Grocery} von {Country}",
             "Ist mein {Grocery} saisonal",
-            "Sind meine {Grocery} regional",
+            "Ist mein {Grocery} aus {Country} saisonal",
+            "Ist mein {Grocery} von {Country} saisonal",
             "Sind meine {Grocery} saisonal",
+            "Sind meine {Grocery} aus {Country} saisonal",
+            "Sind meine {Grocery} von {Country} saisonal",
             "Berechne mir den CO zwei Ausstoß eines {Grocery}",
+            "Berechne mir den CO zwei Ausstoß eines {Grocery} aus {Country}",
+            "Berechne mir den CO zwei Ausstoß eines {Grocery} von {Country}",
             "Berechne mir den CO zwei Ausstoß einer {Grocery}",
+            "Berechne mir den CO zwei Ausstoß einer {Grocery} aus {Country}",
+            "Berechne mir den CO zwei Ausstoß einer {Grocery} von {Country}",
             "Berechne mir den CO zwei Ausstoß von {Grocery}",
+            "Berechne mir den CO zwei Ausstoß von {Grocery} aus {Country}",
+            "Berechne mir den CO zwei Ausstoß von {Grocery} von {Country}",
             "Wie ist der CO zwei Ausstoß eines {Grocery}",
+            "Wie ist der CO zwei Ausstoß eines {Grocery} aus {Country}",
+            "Wie ist der CO zwei Ausstoß eines {Grocery} von {Country}",
             "Wie ist der CO zwei Ausstoß einer {Grocery}",
+            "Wie ist der CO zwei Ausstoß einer {Grocery} aus {Country}",
+            "Wie ist der CO zwei Ausstoß einer {Grocery} von {Country}",
             "Wie ist der CO zwei Ausstoß von {Grocery}",
-            "{Grocery}"
+            "Wie ist der CO zwei Ausstoß von {Grocery} aus {Country}",
+            "Wie ist der CO zwei Ausstoß von {Grocery} von {Country}",
+            "{Grocery}",
+            "{Grocery} aus {Country}",
+            "{Grocery} von {Country}"
+          ]
+        },
+        {
+          "name": "GroceriesAddIntent",
+          "slots": [
+            {
+              "name": "Grocery",
+              "type": "LIST_OF_ITEMS"
+            },
+            {
+              "name": "Country",
+              "type": "LIST_OF_COUNTRIES"
+            }
+          ],
+          "samples": [
+            "{Grocery} aus {Country} hinzufügen"
+          ]
+        },
+        {
+          "name": "GroceriesRemoveIntent",
+          "slots": [
+            {
+              "name": "Grocery",
+              "type": "LIST_OF_ITEMS"
+            },
+            {
+              "name": "Country",
+              "type": "LIST_OF_COUNTRIES"
+            }
+          ],
+          "samples": [
+            "{Grocery} aus {Country} entfernen"
+          ]
+        },
+        {
+          "name": "GroceriesSumIntent",
+          "slots": [],
+          "samples": [
+            "CO zwei Bilanz meines Einkaufs"
           ]
         },
         {
@@ -66,6 +141,21 @@
         }
       ],
       "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "Italien"
+              }
+            },
+            {
+              "name": {
+                "value": "Südafrika"
+              }
+            }
+          ],
+          "name": "LIST_OF_COUNTRIES"
+        },
         {
           "values": [
             {
@@ -324,5 +414,5 @@
       ]
     }
   },
-  "version": "9"
+  "version": "17"
 }
