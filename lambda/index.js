@@ -56,30 +56,8 @@ const GroceriesAddIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesAddIntent';
     },
     async handle(handlerInput) {     
-        let groceryName;
-        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
-        if (grocerySlot && grocerySlot.value) {
-          groceryName = grocerySlot.value.toLowerCase();
-        }
-        
-        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
-        let countryName;
-        if (countrySlot && countrySlot.value) {
-          countryName = countrySlot.value.toLowerCase();
-        } 
-        
-        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
-        const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
-
-        await axios.get(`https://api.eu.amazonalexa.com/v1/devices/${deviceId}/settings/address/countryAndPostalCode`, { 
-          headers: {'Accept': 'application/json', 'Authorization': `Bearer ${consentToken}` }
-        })
-        .then((response) => {
-          country = response.data.countryCode.toLowerCase();
-        })
-        .catch((error)=> {
-            country = '';
-        });
+        let groceryName = getGroceryName(handlerInput);
+        let countryName = getCountryName(handlerInput);
   
         let speakOutput = 'Leider konnte ich Ihre Anfrage nicht hinzufügen.';
         let grocery = getGrocery(country, groceryName, countryName);
@@ -88,6 +66,7 @@ const GroceriesAddIntentHandler = {
             speakOutput = groceryName + ' aus ' + countryName + ' hinzugefügt.';
         }
         
+        await ensureUserCountry(handlerInput);
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -102,17 +81,8 @@ const GroceriesRemoveIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GroceriesRemoveIntent';
     },
     handle(handlerInput) {
-        let groceryName;
-        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
-        if (grocerySlot && grocerySlot.value) {
-          groceryName = grocerySlot.value.toLowerCase();
-        }
-        
-        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
-        let countryName;
-        if (countrySlot && countrySlot.value) {
-          countryName = countrySlot.value.toLowerCase();
-        } 
+        let groceryName = getGroceryName(handlerInput);
+        let countryName = getCountryName(handlerInput);
         
         shoppingList.forEach((item)=> {
             if(item.name == groceryName && item.country == countryName){
@@ -153,7 +123,7 @@ const GroceriesSumIntentHandler = {
             }
         });
      
-        speakOutput = speakOutput + ". In Summe ergibt das einen errechneten CO2 Ausstoß von: " +  Math.round(sum) + " Gramm. "; 
+        speakOutput = speakOutput + ". In Summe ergibt das einen errechneten CO2 Ausstoß von: " +  Math.round(sum * 100) / 100 + " Gramm. "; 
         speakOutput = speakOutput + "Ein Kilogramm Ihres Einkaufs entspricht in etwa einer Fahrtstrecke von " + Math.round(sum / 0.18) * 10 + " Meter mit einem PKW!" // CO2 entries per 100 g
 
         return handlerInput.responseBuilder
@@ -174,31 +144,13 @@ const GroceriesIntentHandler = {
     async handle(handlerInput) {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-    
-        const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
-        let groceryName;
-        if (grocerySlot && grocerySlot.value) {
-          groceryName = grocerySlot.value.toLowerCase();
-        }
-        
-        const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
-        let countryName;
-        if (countrySlot && countrySlot.value) {
-          countryName = countrySlot.value.toLowerCase();
-        } 
+        let groceryName = getGroceryName(handlerInput);
+        let countryName = getCountryName(handlerInput);
   
         const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
         const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
 
-        await axios.get(`https://api.eu.amazonalexa.com/v1/devices/${deviceId}/settings/address/countryAndPostalCode`, { 
-          headers: {'Accept': 'application/json', 'Authorization': `Bearer ${consentToken}` }
-        })
-        .then((response) => {
-          country = response.data.countryCode.toLowerCase();
-        })
-        .catch((error)=> {
-            country = '';
-        });
+        await ensureUserCountry(handlerInput);
         
         if(country == '') {
             return handlerInput.responseBuilder
@@ -253,6 +205,41 @@ function getGrocery(country, groceryName, countryName) {
     });
     
     return retVal;
+}
+
+function getGroceryName(handlerInput) {
+    let groceryName;
+    const grocerySlot = handlerInput.requestEnvelope.request.intent.slots.Grocery;
+    if (grocerySlot && grocerySlot.value) {
+      groceryName = grocerySlot.value.toLowerCase();
+    }
+    
+    return groceryName;
+}
+
+function getCountryName(handlerInput) {
+    let countryName;
+    const countrySlot = handlerInput.requestEnvelope.request.intent.slots.Country;
+    if (countrySlot && countrySlot.value) {
+      countryName = countrySlot.value.toLowerCase();
+    } 
+    return countryName;
+}
+
+async function ensureUserCountry(handlerInput) {
+    if(country == '') {
+        const deviceId = handlerInput.requestEnvelope.context.System.device.deviceId;
+        const consentToken = handlerInput.requestEnvelope.context.System.apiAccessToken;
+        await axios.get(`https://api.eu.amazonalexa.com/v1/devices/${deviceId}/settings/address/countryAndPostalCode`, { 
+          headers: {'Accept': 'application/json', 'Authorization': `Bearer ${consentToken}` }
+        })
+        .then((response) => {
+          country = response.data.countryCode.toLowerCase();
+        })
+        .catch((error)=> {
+            country = '';
+        });
+    }
 }
 
 const HelpIntentHandler = {

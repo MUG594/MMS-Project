@@ -4,7 +4,7 @@ module.exports = {
             "at": [
                 {
             		"Ananas": [{
-            			"Suedafrika": {
+            			"Südafrika": {
             				SeasonFrom: 1,
             				SeasonTo: 12,
             				InSeason: 0.6
