@@ -45,6 +45,9 @@
             "CO zwei Ausstoß eines {Grocery}",
             "CO zwei Ausstoß eines {Grocery} aus {Country}",
             "CO zwei Ausstoß eines {Grocery} von {Country}",
+            "CO zwei Ausstoß einem {Grocery}",
+            "CO zwei Ausstoß einem {Grocery} aus {Country}",
+            "CO zwei Ausstoß einem {Grocery} von {Country}",
             "Welchen CO zwei Ausstoß hat eine {Grocery}",
             "Welchen CO zwei Ausstoß hat eine {Grocery} aus {Country}",
             "Welchen CO zwei Ausstoß hat eine {Grocery} von {Country}",
@@ -63,6 +66,9 @@
             "CO zwei Ausstoß eines {Grocery}",
             "CO zwei Ausstoß eines {Grocery} aus {Country}",
             "CO zwei Ausstoß eines {Grocery} von {Country}",
+            "CO zwei Ausstoß einem {Grocery}",
+            "CO zwei Ausstoß einem {Grocery} aus {Country}",
+            "CO zwei Ausstoß einem {Grocery} von {Country}",
             "Ist mein {Grocery} saisonal",
             "Ist mein {Grocery} aus {Country} saisonal",
             "Ist mein {Grocery} von {Country} saisonal",
@@ -72,6 +78,9 @@
             "Berechne mir den CO zwei Ausstoß eines {Grocery}",
             "Berechne mir den CO zwei Ausstoß eines {Grocery} aus {Country}",
             "Berechne mir den CO zwei Ausstoß eines {Grocery} von {Country}",
+            "Berechne mir den CO zwei Ausstoß einem {Grocery}",
+            "Berechne mir den CO zwei Ausstoß einem {Grocery} aus {Country}",
+            "Berechne mir den CO zwei Ausstoß einem {Grocery} von {Country}",
             "Berechne mir den CO zwei Ausstoß einer {Grocery}",
             "Berechne mir den CO zwei Ausstoß einer {Grocery} aus {Country}",
             "Berechne mir den CO zwei Ausstoß einer {Grocery} von {Country}",
@@ -414,5 +423,5 @@
       ]
     }
   },
-  "version": "17"
+  "version": "18"
 }

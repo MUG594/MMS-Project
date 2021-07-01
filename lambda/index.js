@@ -41,7 +41,7 @@ const HelloWorldIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Hallo Welt! Ich bin ein CO zwei Berater von Helena und Fabian!';
+        const speakOutput = 'Hallo Welt! Ich bin ein CO2 Berater von Helena und Fabian!';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -153,8 +153,8 @@ const GroceriesSumIntentHandler = {
             }
         });
      
-        speakOutput = speakOutput + ". In Summe ergibt das einen errechneten CO Ausstoß von: " + sum + " Gramm. ";
-        speakOutput = speakOutput + "Das entspricht in etwa einer Fahrtstrecke von " + Math.round(sum / 0.2) + " Meter mit einem PKW!"
+        speakOutput = speakOutput + ". In Summe ergibt das einen errechneten CO2 Ausstoß von: " +  Math.round(sum) + " Gramm. "; 
+        speakOutput = speakOutput + "Ein Kilogramm Ihres Einkaufs entspricht in etwa einer Fahrtstrecke von " + Math.round(sum / 0.18) * 10 + " Meter mit einem PKW!" // CO2 entries per 100 g
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -203,7 +203,7 @@ const GroceriesIntentHandler = {
         if(country == '') {
             return handlerInput.responseBuilder
                 .withAskForPermissionsConsentCard(['read::alexa:device:all:address:country_and_postal_code'])
-                .speak("Leider kann ich Ihre Position nicht ermitteln. Bitte gewähren Sie mir die nötigen Berechtigungen zur Lokalisation")
+                .speak("Leider kann ich Ihre Position nicht ermitteln. Bitte gewähren Sie mir die nötigen Berechtigungen zur Lokalisierung")
                 .getResponse();
         }
   
@@ -216,14 +216,14 @@ const GroceriesIntentHandler = {
         
         if(groceryObject != undefined) {
             if(groceryObject.SeasonFrom <= currentMonth && groceryObject.SeasonTo >= currentMonth) {
-                outputSpeech = groceryName + " aus " + countryName + " hat gerade Saison. Der CO zwei Ausstoß beträgt " + groceryObject.InSeason + " Gramm";
+                outputSpeech = groceryName + " aus " + countryName + " hat gerade Saison. Der CO2 Ausstoß beträgt " + groceryObject.InSeason + " Gramm";
             }
             else {
-                outputSpeech = groceryName + " aus " + countryName + " ist gerade nicht saisonal, daher beträgt der CO zwei Ausstoß " + groceryObject.OffSeason + " Gramm";
+                outputSpeech = groceryName + " aus " + countryName + " ist gerade nicht saisonal, daher beträgt der CO2 Ausstoß " + groceryObject.OffSeason + " Gramm";
             }
         }
         else {
-            outputSpeech =outputSpeech+ "Leider konnte ich keine CO2 Informationen für " + groceryName + " aus " + countryName + " finden."
+            outputSpeech = outputSpeech + "Leider konnte ich keine CO2 Informationen für " + groceryName + " aus " + countryName + " finden."
         }
   
         return handlerInput.responseBuilder
